@@ -1,4 +1,5 @@
 import requests
+from os import system, name
 
 
 class ShopAPIFunctions:
@@ -29,20 +30,25 @@ class ShopAPIFunctions:
     def changeBase(self, baseLink):
         self.BASE = baseLink
 
+    def clearStock(self):
+        requests.post(self.BASE + "all", {"name": 'test', "amount": 0, "type": "CLEAR"})
+
 
 #Simple console app
 if __name__ == '__main__':
     shopAPI = ShopAPIFunctions()
-    print("Welcome to Shop REST API!\n"
-          + "Please select what you want to do:\n"
-          + "1. Show current stock\n"
-          + "2. Show stock for specific item ID\n"
-          + "3. Add\Create item to stock\n"
-          + "4. Order an item from stock\n"
-          + "5. Change link to API\n"
-          + "6. Exit\n")
+
     running = True
     while running:
+        print("\n\n\nWelcome to Shop REST API!\n"
+              + "Please select what you want to do:\n"
+              + "1. Show current stock\n"
+              + "2. Show stock for specific item ID\n"
+              + "3. Add\Create item to stock\n"
+              + "4. Order an item from stock\n"
+              + "5. Change link to API\n"
+              + "6. Clear stock\n"
+              + "7. Exit\n")
         option = input("Type 1/2/3/4/5: ")
         if (option == "1"):
             shopAPI.showStock()
@@ -60,8 +66,12 @@ if __name__ == '__main__':
         elif (option == "5"):
             BASE = input("Please provide API link: ")
             shopAPI.changeBase(BASE)
-        elif (option=="6"):
+        elif (option == "6"):
+            shopAPI.clearStock()
+        elif (option=="7"):
             running = False
+
+        wait = input("Press ENTER to continue...")
 
 
 

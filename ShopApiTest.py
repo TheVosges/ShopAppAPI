@@ -15,6 +15,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(None, print(response))
 
     def testAddItems(self):
+        response = requests.post(BASE + "all", {"name": 'test', "amount": 0, "type": "CLEAR"})
         response = requests.post(BASE + "all", {"name": 'apple', "amount": 2, "type": "PUT"})
         response1 = requests.post(BASE + "all", {"name": 'apple', "amount": 5, "type": "PUT"})
         response2 = requests.post(BASE + "all", {"name": 'orange', "amount": 8, "type": "PUT"})
