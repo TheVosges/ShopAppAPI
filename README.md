@@ -12,7 +12,7 @@ Next to run console app that manages this applocation please type:
 python App.py
 ```
 
-Please update your link to API in App.py (option 6):
+Please update your link to API in App.py (option 5):
 <center>
 
 ![](https://i.imgur.com/ZzEzPHK.png)
