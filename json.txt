@@ -1,0 +1,1 @@
+{"1": {"name": "apple", "amount": 3}, "2": {"name": "orange", "amount": 5}, "3": {"name": "banana", "amount": 0}}

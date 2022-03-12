@@ -1,0 +1,64 @@
+from flask import Flask, jsonify, request, render_template
+from flask_restful import Resource, Api, reqparse
+import json
+import requests
+
+BASE = "http://127.0.0.1:5000/"
+
+app = Flask(__name__)
+api = Api(app)
+shopApiParser = reqparse.RequestParser()
+shopApiParser.add_argument("name", type=str, help="Name of product", required = True)
+shopApiParser.add_argument("amount", type=int, help="Amount of products", required = True)
+shopApiParser.add_argument("type", type=str, help="Type of request (PUT,TAKE)", required = True)
+
+class ShopApi(Resource):
+
+    def get(self, productID):
+
+        f = open('data.json')
+        data = json.load(f)
+        print(data)
+        # return self.data["products"][productID]
+        if productID == "all":
+            try:
+                return data
+            except json.decoder.JSONDecodeError:
+                return "Unexceped error (probably no data foudnd)"
+        else:
+            try:
+                return data[productID]
+            except KeyError:
+                return "No item for this ID"
+
+    def post(self, productID):
+        args = shopApiParser.parse_args()
+
+        wasInStock = False
+        response = requests.get(BASE + "all")
+        jsonObj = response.json()
+        for item in jsonObj.values():
+             if args['name'] == item['name']:
+                wasInStock = True
+                item['amount'] = item['amount'] + args['amount']
+                with open('data.json', 'w') as outfile:
+                    json.dump(jsonObj, outfile)
+                break
+        # if (not wasInStock):
+        #     dict = {"name" : productName, "amount" : amount}
+        #     self.data.append(dict)
+        #     with open('data.json', 'w') as outfile:
+        #         json.dump(response, outfile)
+        return {productID: args}, 201
+
+        # jsonReq = request.get_json()
+        # with open("data.json", "w") as outfile:
+        #     json.dump(jsonReq, outfile)
+        # return 'You posted this data: ' + str(jsonReq), 201
+
+api.add_resource(ShopApi, '/<string:productID>')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+#curl -H "Content-Type: application/json" -X POST -d "{ \"name\":\"xyz\", \"address\":\"address_xyz\" }"  http://127.0.0.1:5000
